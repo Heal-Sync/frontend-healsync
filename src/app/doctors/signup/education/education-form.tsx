@@ -112,7 +112,6 @@ export function EducationForm() {
     const formdata = new FormData();
     formdata.append('username', doctor.username);
     formdata.append('degree', doctor.degreepdf); 
-    console.log("username", doctor.username);
     
     fetch(`${backend.rootapi}/doctor/register/degree`, {
       method: 'POST',
@@ -218,7 +217,7 @@ export function EducationForm() {
                   Select Medical Programs
                 </FormLabel>
                 <FormDescription>
-                  Select the medical education programs you are interested in.
+                  Select the medical programs you have completed.
                 </FormDescription>
               </div>
               {items.map((item) => (
