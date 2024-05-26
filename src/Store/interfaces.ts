@@ -3,8 +3,10 @@ export interface User {
   username: string;
   password: string;
   name: string;
+  email: string;
+  dob: string;
+  phoneNumber: string;
   address: string;
-  age: number;
   profileImage: File | null;
   medicalhistory: Array<{
     path: string;

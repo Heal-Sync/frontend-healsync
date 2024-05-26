@@ -190,7 +190,7 @@ export default function NavBar() {
                         <ListItem
                         key="usersignup"
                         
-                        href="/"
+                        href="/users/signup"
                         >
                           <div className="flex gap-3">
                             <Image src="/register.svg" width={20} height={20} alt=""  />
