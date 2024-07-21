@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+const nextConfig = {
+    experimental: {
+      middleware: {
+        skipMiddlewareUrlNormalize: true,
+        skipTrailingSlashRedirect: true,
+      },
+    },
+  }
+  
+  export default nextConfig

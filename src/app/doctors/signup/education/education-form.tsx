@@ -93,9 +93,6 @@ const displayFormSchema = z.object({
 
 type DisplayFormValues = z.infer<typeof displayFormSchema>;
 
-
-
-
 export function EducationForm() {
   const isDataUploaded = useRef({degreePdf: false, profileImage: false, finaldata: false});
   const [isAlert, setAlert] = useState(false);
@@ -150,8 +147,7 @@ export function EducationForm() {
       console.error(error);
       });
   }
-
-
+  // Update doctor.ispaymentcomplete when payment has been done by the doctor and update it here also
   useEffect(() => {   
     if(!doctor.isEducationComplete || !doctor.isProfileComplete || !doctor.isAccountComplete || !doctor.isCategoryComplete || !doctor.isLocationComplete) {
       setAlert(true);
@@ -190,6 +186,8 @@ export function EducationForm() {
     defaultValues,
   });
   function onSubmit(data: DisplayFormValues) {
+    console.log(data);
+    
     data["isEducationComplete"] = true;
     dispatch(addDoctorEducationdetails(data));
     toast({

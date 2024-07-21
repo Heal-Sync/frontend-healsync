@@ -24,6 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast"
 import { ToastAction } from "@/components/ui/toast";
 import { addDoctorProfiledetails } from "@/Store/Slices/doctorSlice";
+import axios from "axios";
 
 const profileFormSchema = z
   .object({
@@ -68,6 +69,8 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export function ProfileForm() {
   const dispatch = useDispatch();
   const { doctor } = useSelector((state) => state as any);
+  const {backend} = useSelector((state) => state as any);
+  
   const { toast } = useToast();
   
   const defaultValues: Partial<ProfileFormValues> = {
@@ -90,7 +93,23 @@ export function ProfileForm() {
     control: form.control,
   });
 
-  function onSubmit(data: ProfileFormValues) {
+  async function onSubmit(data: ProfileFormValues) {
+    
+    try {
+      const response = await axios.get(
+        `${backend.rootapi}/doctor/doctor-check`,
+        { params: { key : 'email', value : data.email } }
+      );
+      if(response.data.isExists){
+        form.setError("email", {
+          type: "manual",
+          message: "Email already exists",
+        });
+        return;
+      }
+    } catch (error) {
+      console.error("Error while checking email", error);
+    }
     data["isProfileComplete"] = true;    
     dispatch(addDoctorProfiledetails(data));
     toast({

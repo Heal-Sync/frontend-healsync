@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Categories from "@/components/Categories/Categories";
 import { Faqs } from "@/components/Faqs/faqs";
 import Features from "@/components/Features/Features";
@@ -10,21 +10,18 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-
     <>
-        <NavBar />
-    <div className="flex justify-center">
-      <div className="max-w-screen-lg w-full">
-        <HeroSection />
-        <ScrollDown />
-        <Categories />
-        <Features />
-        <Testimonial />
-        <Faqs />
-      
+      <NavBar />
+      <div className="flex justify-center">
+        <div className="max-w-screen-lg w-full">
+          <HeroSection />
+          <ScrollDown />
+          <Categories />
+          <Features />
+          <Testimonial />
+          <Faqs />
+        </div>
       </div>
-    </div>
     </>
-  
   );
 }

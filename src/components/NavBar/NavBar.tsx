@@ -159,7 +159,7 @@ export default function NavBar() {
                         <ListItem
                         key="doctorsignin"
                         
-                        href="/"
+                        href="/doctors/login"
                         
                         >
                           <div className="flex gap-3">
@@ -180,7 +180,7 @@ export default function NavBar() {
                         <ListItem
                         key="usersignin"
                         
-                        href="/"
+                        href="/users/login"
                         >
                           <div className="flex gap-3">
                             <Image src="/login.svg" width={20} height={20} alt=""  />

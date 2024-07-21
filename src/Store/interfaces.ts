@@ -8,6 +8,7 @@ export interface User {
   phoneNumber: string;
   address: string;
   profileImage: File | null;
+  profilename: string,
   medicalhistory: Array<{
     path: string;
     date: string;
@@ -73,6 +74,7 @@ export interface Doctor {
   medicaldegree: Array<string>;
   degreepdf: File | null;
   profileImage: File | null;
+  profilename: string,
   feedback: Array<{
     userid: string;
     username: string;
@@ -109,6 +111,7 @@ export interface Doctor {
   isAccountComplete: boolean;
   isCategoryComplete: boolean;
   isLocationComplete: boolean;
+  ispaymentComplete: boolean;
   isEducationComplete: boolean;
   registration: string;
 }

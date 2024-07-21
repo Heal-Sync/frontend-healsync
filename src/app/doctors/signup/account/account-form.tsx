@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-
 import {
   Form,
   FormControl,
@@ -15,13 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import { toast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addDoctorAccountdetails } from "@/Store/Slices/doctorSlice";
-
+import axios from "axios";
+import { debounce } from "@/app/utils/debounce";
 
 const accountFormSchema = z.object({
   username: z
@@ -45,10 +44,11 @@ const accountFormSchema = z.object({
 
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
-
 export function AccountForm() {
   const dispatch = useDispatch();
+
   const { doctor } = useSelector((state) => state);
+  const {backend} = useSelector((state) => state as any);
   const [age, setAge] = useState<number>(0);
   const defaultValues: Partial<AccountFormValues> = {
     username: doctor.username,
@@ -59,7 +59,6 @@ export function AccountForm() {
     age: doctor.age,
     profileImage: doctor.profileImage,
   };
-  
 
   const calculateAge = (dob: Date): number => {
     const today = new Date();
@@ -76,7 +75,27 @@ export function AccountForm() {
     defaultValues,
   });
 
-  function onSubmit(data: AccountFormValues) {
+  async function onSubmit(data: AccountFormValues) {
+    // data['username'] = username; 
+    try {
+      const response = await axios.get(
+        `${backend.rootapi}/doctor/doctor-check`,
+        { params: { key : 'username', value : data.username } }
+      );
+      if (response.data.isExists) {        
+        form.setError("username", {
+          type: "manual",
+          message: `Username already exists ${data.username}` ,
+        });
+        return;
+      } else {
+        form.clearErrors("username");
+      }
+   
+    }
+     catch (error) {
+      console.error("Error while checking username", error);
+    }
     data['age'] = age;
     data['isAccountComplete'] = true;
     dispatch(addDoctorAccountdetails(data));
@@ -93,7 +112,30 @@ export function AccountForm() {
     setAge(calculateAge(selectedDate));
   };
 
+  const debouncedCheckUsername = useCallback(debounce(async (newUsername: string) => {
+    try {
+      const response = await axios.get(
+        `${backend.rootapi}/doctor/checkuser`,
+        { params: { checkuser: newUsername } }
+      );
+      if (response.data.isUserExists) {
+        form.setError("username", {
+          type: "manual",
+          message: "Username already exists",
+        });
+      } else {
+        form.clearErrors("username");
+      }
+    } catch (error) {
+      console.error("Error while checking username", error);
+    }
+  }, 300), [form]); // 300 ms debounce delay
 
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newUsername = event.target.value;
+    form.setValue("username", newUsername); // Update the form state
+    debouncedCheckUsername(newUsername);    // Perform the debounced check
+  };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -104,7 +146,12 @@ export function AccountForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="Enter username" {...field} />
+              <Input 
+                placeholder="Enter username"
+                {...field}
+                // value={username}
+                onChange={handleUsernameChange}
+              />
               </FormControl>
               <FormDescription>
                 Select a unique username to represent you on the platform.

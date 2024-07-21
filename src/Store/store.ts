@@ -3,11 +3,12 @@ import type { User, Doctor, Token, Info } from "./interfaces";
 import initialState from "./initialStates";
 import {doctorReducer} from "./Slices/doctorSlice";
 import { userReducer } from "./Slices/userSlice";
+import { tokenReducer } from "./Slices/tokenSlice";
 
 const rootReducer  = combineReducers({
   user: userReducer,
   doctor: doctorReducer,
-  token: (state: Token = initialState.token) => state,
+  token: tokenReducer,
   info: (state: Info = initialState.info) => state,
   backend: (state = initialState.backend) => state,
 });
